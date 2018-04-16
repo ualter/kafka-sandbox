@@ -1,0 +1,48 @@
+Docker KAFKA
+#
+https://hub.docker.com/r/wurstmeister/kafka/
+docker-compose up -d
+docker-compose scale kafka=3
+
+
+
+## CREATE Topic in Kafka INPUT
+bin/kafka-topics.sh --create \
+    --zookeeper localhost:2181 \
+    --replication-factor 1 \
+    --partitions 1 \
+    --topic streams-plaintext-input
+    
+## CREATE Topic in Kafka OUTPUT
+bin/kafka-topics.sh --create \
+    --zookeeper localhost:2181 \
+    --replication-factor 1 \
+    --partitions 1 \
+    --topic streams-wordcount-output \
+    --config cleanup.policy=compact
+    
+
+#Launch Java the Application, it will read in the INPUT, counting the words, the result will be at the OUTPUT Topic
+
+## PRODUCE values to the Kafka INPUT Topic 
+bin/kafka-console-producer.sh --broker-list localhost:9092 --topic streams-plaintext-input
+
+## CONSUME values out of the Kafka OUTPUT Topic
+bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 \
+    --topic streams-wordcount-output \
+    --from-beginning \
+    --formatter kafka.tools.DefaultMessageFormatter \
+    --property print.key=true \
+    --property print.value=true \
+    --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer \
+    --property value.deserializer=org.apache.kafka.common.serialization.LongDeserializer
+    
+bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 \
+    --topic streams-linesplit-output \
+    --from-beginning \
+    --formatter kafka.tools.DefaultMessageFormatter \
+    --property print.key=true \
+    --property print.value=true \
+    --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer \
+    --property value.deserializer=org.apache.kafka.common.serialization.StringDeserializer    
+
