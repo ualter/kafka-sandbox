@@ -5,6 +5,8 @@ docker-compose up -d
 docker-compose scale kafka=3
 
 
+## Describe Topics
+./bin/kafka-topics.sh --zookeeper localhost:2181 --describe
 
 ## CREATE Topic in Kafka INPUT
 bin/kafka-topics.sh --create \
@@ -28,7 +30,7 @@ bin/kafka-topics.sh --create \
 bin/kafka-console-producer.sh --broker-list localhost:9092 --topic streams-plaintext-input
 
 ## CONSUME values out of the Kafka OUTPUT Topic
-bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 \
+./bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 \
     --topic streams-wordcount-output \
     --from-beginning \
     --formatter kafka.tools.DefaultMessageFormatter \
@@ -37,7 +39,7 @@ bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 \
     --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer \
     --property value.deserializer=org.apache.kafka.common.serialization.LongDeserializer
     
-bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 \
+./bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 \
     --topic streams-linesplit-output \
     --from-beginning \
     --formatter kafka.tools.DefaultMessageFormatter \
@@ -45,4 +47,23 @@ bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 \
     --property print.value=true \
     --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer \
     --property value.deserializer=org.apache.kafka.common.serialization.StringDeserializer    
+    
+    
+./bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 \
+    --topic topicA \
+    --from-beginning \
+    --formatter kafka.tools.DefaultMessageFormatter \
+    --property print.key=true \
+    --property print.value=true \
+    --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer \
+    --property value.deserializer=org.apache.kafka.common.serialization.StringDeserializer    
+    
+./bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 \
+    --topic customerTopic \
+    --from-beginning \
+    --formatter kafka.tools.DefaultMessageFormatter \
+    --property print.key=true \
+    --property print.value=true \
+    --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer \
+    --property value.deserializer=org.springframework.kafka.support.serializer.JsonSerializer    
 

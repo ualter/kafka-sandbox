@@ -7,7 +7,9 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 
-public class SimpleConsumer {
+import com.kafka.sandbox.spring.Customer;
+
+public class SimpleConsumerCustomer {
 	
 	public static void main(String[] args) {
 		Properties props = new Properties();
@@ -16,16 +18,18 @@ public class SimpleConsumer {
 		props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
 	    props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         
-        KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
-        consumer.subscribe(Arrays.asList("streams-plaintext-input"));
+        KafkaConsumer<String, Customer> consumer = new KafkaConsumer<>(props);
+        consumer.subscribe(Arrays.asList("customerTopic"));
         
         try {
 	        while (true) {
-	            ConsumerRecords<String, String> records = consumer.poll(100);
-	            for (ConsumerRecord<String, String> record : records) {
-	            	System.out.println("***************************************************************");
+	        	System.out.println("AAA");
+	            ConsumerRecords<String, Customer> records = consumer.poll(1000);
+	            System.out.println("BBB");
+	            for (ConsumerRecord<String, Customer> record : records) {
 	                System.out.printf("offset = %d, key = %s, value = %s", record.offset(), record.key(), record.value());
-	                System.out.println("***************************************************************");
+	                System.out.println("Customer:" + record.value());
+	                System.out.println("");
 	            }
 	            
 	        }

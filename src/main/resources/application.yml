@@ -1,0 +1,16 @@
+kafka:
+   bootstrapAddress: localhost:9092
+   
+message:
+   topic:
+      name: topicA
+
+customer:
+   topic:
+      name: customerTopic         
+      
+logging:
+  level:
+    root: WARN
+    org.springframework.web: INFO
+    org.apache.kafka: INFO
